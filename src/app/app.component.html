@@ -1,0 +1,94 @@
+<div id="content">
+  <mat-spinner
+    class="loader"
+    *ngIf="mapIsLoading"
+  ></mat-spinner>
+  <google-map
+    height="100%"
+    width="100%"
+    [zoom]="zoom"
+    [center]="center"
+    [options]="options"
+  >
+    <map-marker
+      #markerEl="mapMarker"
+      *ngFor="let marker of markers"
+      [position]="marker.position"
+      [label]="marker.label"
+      [title]="marker.title"
+      [options]="marker.options"
+      (mapClick)="openInfo(markerEl, marker.info)"
+    >
+      <map-info-window [innerHTML]="infoContent"></map-info-window>
+    </map-marker>
+  </google-map>
+</div>
+<section>
+  <div class="button-row">
+    <button
+      (click)="zoomIn()"
+      mat-raised-button
+      color="primary"
+      [disabled]="mapIsLoading"
+    >
+      Zoom in
+    </button>
+    <button
+      (click)="zoomOut()"
+      mat-raised-button
+      color="primary"
+      [disabled]="mapIsLoading"
+    >
+      Zoom out
+    </button>
+    <button
+      (click)="resetMap()"
+      mat-raised-button
+      color="primary"
+      [disabled]="mapIsLoading"
+    >
+      Reset map
+    </button>
+    <div>
+      <div class="align-content">
+        <h4>State Filter</h4>
+        <mat-form-field appearance="outline">
+          <mat-label>Filter by state</mat-label>
+          <mat-select
+            (selectionChange)="filterByState($event)"
+            [(ngModel)]="stateValue"
+            [disabled]="mapIsLoading"
+          >
+            <mat-option value="All">All States</mat-option>
+            <mat-option
+              *ngFor="let state of states"
+              [value]="state.abbreviation"
+            >
+              {{ state.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="align-content">
+        <h4>Select Top Plants</h4>
+        <mat-form-field appearance="outline">
+          <mat-label>Filter by plant annual net generation</mat-label>
+          <mat-select
+            (selectionChange)="filterTopPlants()"
+            #matSelect
+            [(ngModel)]="plantsFilterValue"
+            [disabled]="mapIsLoading"
+          >
+            <mat-option value="0">Select a number...</mat-option>
+            <mat-option
+              *ngFor="let topPlant of topPlantsFilter"
+              [value]="topPlant"
+            >
+              {{ topPlant }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+  </div>
+</section>
