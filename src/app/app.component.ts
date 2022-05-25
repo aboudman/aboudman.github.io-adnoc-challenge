@@ -4,6 +4,7 @@ import { MapInfoWindow, MapMarker, GoogleMap } from '@angular/google-maps';
 import { DataService } from './services/data.service';
 import { EntityStateCodes } from './properties/states';
 import * as XLSX from 'xlsx';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-root',
@@ -15,6 +16,7 @@ export class AppComponent implements OnInit {
   @ViewChild(MapInfoWindow, { static: false }) info: MapInfoWindow;
 
   // Initializing global variables
+  title = 'Power Plants Distribution';
   stateValue: string = 'All';
   plantsFilterValue: string = '0';
   topPlantsFilter = [5, 10, 20, 40, 75, 100, 1000];
@@ -32,9 +34,10 @@ export class AppComponent implements OnInit {
   dataArray: any = [];
   mapIsLoading: boolean = true;
 
-  constructor(private dataService: DataService) {}
+  constructor(private dataService: DataService, private titleService: Title) {}
 
   ngOnInit() {
+    this.setTitle(this.title); 
     // reset map to default values
     this.resetMap();
 
@@ -42,6 +45,10 @@ export class AppComponent implements OnInit {
     setTimeout(() => {
       this.readData();
     }, 1000);
+  }
+
+  setTitle(title: string) {
+    this.titleService.setTitle(title);
   }
 
   // Method to zoom in
@@ -142,7 +149,7 @@ export class AppComponent implements OnInit {
       '<p><h3>Plant annual net generation (MWh)</h3> <a>' +
       Math.abs(plantInfo.PLNGENAN) +
       '</a></p>' +
-      '<p><h3>Percentage of annual net generation across state</h3> <a>' +
+      '<p><h3>Percentage of plant annual net generation across state</h3> <a>' +
       plantPercentage +
       '%</a></p>' +
       '</div>' +
